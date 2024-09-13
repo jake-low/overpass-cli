@@ -2,6 +2,9 @@
 
 A command line tool for querying OpenStreetMap data using the Overpass API.
 
+> [!IMPORTANT]
+> By default, this tool makes requests to [overpass-api.de](https://overpass-api.de/), which is a public server generously offered to the OpenStreetMap community free of charge. It is intended primarily for running manual queries and other low-volume use. Please do not abuse this service by making excessive requests or downloading enormous amounts of data. [See the usage policy for more info](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
+
 ## Example
 
 This invocation finds nodes tagged `natural=arch` in a bounding box roughly covering Arches National Park in Utah, and returns them as JSON.
@@ -58,7 +61,7 @@ Options:
           Construct and print query but do not send to server
 ````
 
-## Status
+## Maturity
 
 This tool is an early (v0.x) draft. Please feel free to report bugs or request missing features.
 
