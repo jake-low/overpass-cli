@@ -43,7 +43,7 @@ struct CliArgs {
     #[arg(long, default_value_t = false)]
     dry_run: bool,
 
-    /// OverpassQL query string
+    /// OverpassQL query string (when omitted, query is read from STDIN)
     query: Option<String>,
 }
 
