@@ -12,3 +12,7 @@ edition = "2021"
 clap = { version = "4.5.17", features = ["derive", "cargo"] }
 jsonxf = "1.1.1"
 ureq = "2.10.1"
+
+[[bin]]
+name = "overpass"
+path = "src/main.rs"
