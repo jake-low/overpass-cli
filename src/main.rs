@@ -89,6 +89,10 @@ impl fmt::Display for Output {
     }
 }
 
+fn quote(s: &str) -> String {
+    format!("\"{}\"", s)
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let args = CliArgs::parse();
 
@@ -113,15 +117,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     if let Some(date) = args.date {
-        settings.insert("date", date);
+        settings.insert("date", quote(&date));
     }
 
     if let Some(diff) = args.diff {
-        settings.insert("diff", diff.join(","));
+        let (left, right) = (&diff[0], &diff[1]);
+        settings.insert("diff", format!("{},{}", quote(left), quote(right)));
     }
 
     if let Some(adiff) = args.adiff {
-        settings.insert("adiff", adiff.join(","));
+        let (left, right) = (&adiff[0], &adiff[1]);
+        settings.insert("adiff", format!("{},{}", quote(left), quote(right)));
     }
 
     // add settings to start of query
