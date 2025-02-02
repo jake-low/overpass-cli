@@ -7,10 +7,10 @@ A command line tool for querying OpenStreetMap data using the Overpass API.
 
 ## Example
 
-This invocation finds nodes tagged `natural=arch` in a bounding box roughly covering Arches National Park in Utah, and returns them as JSON.
+This invocation finds nodes tagged `natural=arch` in Utah, and returns them as JSON.
 
 ```
-$ overpass --bbox -109.723 38.602 -109.469 38.856 --format json 'node[natural = arch]'
+$ overpass --area 'Utah' --format json 'node[natural = arch]'
 {
   "version": 0.6,
   "generator": "Overpass API 0.7.62.1 084b4234",
@@ -47,6 +47,8 @@ Options:
           Output format [possible values: xml, json]
   -o, --out <OUTPUT>
           Output type [possible values: ids, skel, body, tags, meta, center, geom]
+      --area <SEARCH_STRING>
+          Area name to geocode with Nominatim (available as 'area' in the query)
       --bbox <MIN_LON> <MIN_LAT> <MAX_LON> <MAX_LAT>
           Global bounding box (implicitly applies to all statements)
       --date <DATE>
@@ -56,7 +58,9 @@ Options:
       --adiff <FROM> <TO>
           Like --diff, but returns augmented diff with extra information
       --server <URL>
-          Server URL [default: https://overpass-api.de]
+          Overpass server [default: https://overpass-api.de]
+      --nominatim-server <URL>
+          Nominatim server (queried when --area is used) [default: https://nominatim.openstreetmap.org]
       --dry-run
           Construct and print query but do not send to server
 ````
