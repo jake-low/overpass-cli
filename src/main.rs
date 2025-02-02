@@ -7,6 +7,7 @@ use std::process;
 use clap::{Parser, ValueEnum};
 
 const DEFAULT_SERVER: &str = "https://overpass-api.de";
+const DEFAULT_NOMINATIM_SERVER: &str = "https://nominatim.openstreetmap.org";
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -18,6 +19,10 @@ struct CliArgs {
     /// Output type
     #[arg(short = 'o', long = "out", value_enum)]
     output: Option<Output>,
+
+    /// Area name to geocode with Nominatim (available as 'area' in the query)
+    #[arg(long, value_name = "SEARCH_STRING")]
+    area: Option<String>,
 
     /// Global bounding box (implicitly applies to all statements)
     #[arg(long, num_args = 4, value_names = ["MIN_LON", "MIN_LAT", "MAX_LON", "MAX_LAT"], allow_hyphen_values = true)]
@@ -35,9 +40,13 @@ struct CliArgs {
     #[arg(long, num_args = 1..=2, value_names = ["FROM", "TO"], conflicts_with = "date", conflicts_with = "diff")]
     adiff: Option<Vec<String>>,
 
-    /// Server URL
+    /// Overpass server
     #[arg(long, value_name = "URL", default_value = DEFAULT_SERVER)]
     server: String,
+
+    /// Nominatim server (queried when --area is used)
+    #[arg(long, value_name = "URL", default_value = DEFAULT_NOMINATIM_SERVER)]
+    nominatim_server: String,
 
     /// Construct and print query but do not send to server
     #[arg(long, default_value_t = false)]
@@ -128,6 +137,23 @@ fn main() -> Result<(), Box<dyn Error>> {
     if let Some(adiff) = args.adiff {
         let (left, right) = (&adiff[0], &adiff[1]);
         settings.insert("adiff", format!("{},{}", quote(left), quote(right)));
+    }
+
+    if let Some(area) = args.area {
+        let url = format!(
+            "{}/search?q={}&format=json",
+            args.nominatim_server,
+            urlencoding::encode(&area)
+        );
+        let res = ureq::get(&url).call()?;
+        let json: serde_json::Value = serde_json::from_str(&res.into_string()?)?;
+
+        query = format!(
+            "{}(id:{});\nmap_to_area;\n{}",
+            json[0]["osm_type"].as_str().unwrap(),
+            json[0]["osm_id"],
+            query
+        );
     }
 
     // add settings to start of query
