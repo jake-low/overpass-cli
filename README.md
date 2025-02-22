@@ -53,6 +53,8 @@ Options:
           Global bounding box (implicitly applies to all statements)
       --timeout <TIMEOUT>
           Timeout in seconds
+      --mem <MEM>
+          Max memory for query (accepts SI suffixes e.g. 512MB, 2GiB)
       --date <DATE>
           Return results for a time in the past (ISO 8601 format)
       --diff <FROM> <TO>

@@ -4,6 +4,7 @@ use std::fmt;
 use std::io::{self, Write};
 use std::process;
 
+use byte_unit::Byte;
 use clap::{Parser, ValueEnum};
 
 const DEFAULT_SERVER: &str = "https://overpass-api.de";
@@ -35,6 +36,10 @@ struct CliArgs {
     /// Query timeout in seconds
     #[arg(long)]
     timeout: Option<u32>,
+
+    /// Max memory for query (accepts SI suffixes e.g. 512MB, 2GiB)
+    #[arg(long)]
+    mem: Option<Byte>,
 
     /// Return results for a time in the past (ISO 8601 format)
     #[arg(long, conflicts_with = "diff", conflicts_with = "adiff")]
@@ -135,6 +140,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if let Some(timeout) = args.timeout {
         settings.insert("timeout", timeout.to_string());
+    }
+
+    if let Some(mem) = args.mem {
+        settings.insert("maxsize", mem.as_u64().to_string());
     }
 
     if let Some(date) = args.date {
