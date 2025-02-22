@@ -32,6 +32,10 @@ struct CliArgs {
     #[arg(long, num_args = 4, value_names = ["MIN_LON", "MIN_LAT", "MAX_LON", "MAX_LAT"], allow_hyphen_values = true)]
     bbox: Option<Vec<f64>>,
 
+    /// Query timeout in seconds
+    #[arg(long)]
+    timeout: Option<u32>,
+
     /// Return results for a time in the past (ISO 8601 format)
     #[arg(long, conflicts_with = "diff", conflicts_with = "adiff")]
     date: Option<String>,
@@ -127,6 +131,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     if let Some(format) = args.format {
         settings.insert("out", format.to_string());
+    }
+
+    if let Some(timeout) = args.timeout {
+        settings.insert("timeout", timeout.to_string());
     }
 
     if let Some(date) = args.date {

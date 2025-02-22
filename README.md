@@ -51,6 +51,8 @@ Options:
           Area name to geocode with Nominatim (available as 'area' in the query)
       --bbox <MIN_LON> <MIN_LAT> <MAX_LON> <MAX_LAT>
           Global bounding box (implicitly applies to all statements)
+      --timeout <TIMEOUT>
+          Timeout in seconds
       --date <DATE>
           Return results for a time in the past (ISO 8601 format)
       --diff <FROM> <TO>
