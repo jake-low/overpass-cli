@@ -1,6 +1,6 @@
 [package]
 name = "overpass-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "Query OpenStreetMap data using the Overpass API"
 authors = ["Jake Low <hello@jakelow.com>"]
 homepage = "https://github.com/jake-low/overpass-cli"

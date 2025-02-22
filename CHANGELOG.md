@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 Versioning of this project adheres to the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) spec.
 
+## [0.2.1]
+
+- Added `--timeout` argument to set query timeout
+- Added `--mem` argument to set query max memory (`maxsize` in Overpass QL)
+- Exit with error if query contains settings that conflict with provided CLI args
+
 ## [0.2.0]
 
 - Added `--area` argument to geocode a search string with Nominatim and then
@@ -20,6 +26,7 @@ Versioning of this project adheres to the [Semantic Versioning](https://semver.o
 
 Initial release.
 
+[0.2.1]: https://github.com/jake-low/overpass-cli/releases/tag/v0.2.1
 [0.2.0]: https://github.com/jake-low/overpass-cli/releases/tag/v0.2.0
 [0.1.1]: https://github.com/jake-low/overpass-cli/releases/tag/v0.1.1
 [0.1.0]: https://github.com/jake-low/overpass-cli/releases/tag/v0.1.0
