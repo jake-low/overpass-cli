@@ -161,16 +161,25 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     // add settings to start of query
-    if !query.starts_with('[') && !settings.is_empty() {
-        query = format!(
-            "{};\n{}",
-            settings
-                .iter()
-                .map(|(k, v)| format!("[{}:{}]", k, v))
-                .collect::<Vec<String>>()
-                .join(""),
-            query
-        );
+    if !settings.is_empty() {
+        if query.starts_with('[') {
+            // TODO: could try to parse the settings from the query and merge them
+            // with the ones provided via CLI flags, but for now we'll just error
+            eprintln!(
+                "Error: query starts with settings, which conflicts wth some of the provided command line flags"
+            );
+            process::exit(2);
+        } else {
+            query = format!(
+                "{};\n{}",
+                settings
+                    .iter()
+                    .map(|(k, v)| format!("[{}:{}]", k, v))
+                    .collect::<Vec<String>>()
+                    .join(""),
+                query
+            );
+        }
     }
 
     // add semicolon to end of query if missing
