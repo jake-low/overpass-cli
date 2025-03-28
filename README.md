@@ -34,6 +34,16 @@ $ overpass --area 'Utah' --format json 'node[natural = arch]'
 }
 ```
 
+## Installation
+
+This tool is written in Rust and is published to [crates.io](https://crates.io/crates/overpass-cli). If you have a Rust toolchain installed, you can download and build it by running:
+
+```
+$ cargo install overpass-cli
+```
+
+You can also clone this repository and run `cargo install --path .` in it.
+
 ## Usage
 
 ```
