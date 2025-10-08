@@ -9,10 +9,7 @@ use clap::{Parser, ValueEnum};
 
 const DEFAULT_SERVER: &str = "https://overpass-api.de";
 const DEFAULT_NOMINATIM_SERVER: &str = "https://nominatim.openstreetmap.org";
-
-fn user_agent() -> String {
-    format!("{}/{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
-}
+const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -166,7 +163,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             args.nominatim_server,
             urlencoding::encode(&area)
         );
-        let res = ureq::get(&url).set("User-Agent", &user_agent()).call()?;
+        let res = ureq::get(&url).set("User-Agent", USER_AGENT).call()?;
         let json: serde_json::Value = serde_json::from_str(&res.into_string()?)?;
 
         query = format!(
@@ -224,7 +221,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let endpoint = format!("{}/api/interpreter", args.server);
     let res = ureq::post(&endpoint)
-        .set("User-Agent", &user_agent())
+        .set("User-Agent", USER_AGENT)
         .send_form(&[("data", &query)])?;
 
     match res.content_type() {
