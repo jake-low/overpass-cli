@@ -3,7 +3,9 @@
 A command line tool for querying OpenStreetMap data using the Overpass API.
 
 > [!IMPORTANT]
-> By default, this tool makes requests to [overpass-api.de](https://overpass-api.de/), which is a public server generously offered to the OpenStreetMap community free of charge. It is intended primarily for running manual queries and other low-volume use. Please do not abuse this service by making excessive requests or downloading enormous amounts of data. [See the usage policy for more info](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
+> By default, this tool makes requests to [overpass-api.de](https://overpass-api.de/), which is a public server generously hosted by [FOSSGIS](https://fossgis.de/) and offered to the OpenStreetMap community free of charge. It is intended primarily for running manual queries and other low-volume use. Do not abuse this service by making excessive requests or downloading enormous amounts of data. [See the usage policy for more info](https://dev.overpass-api.de/overpass-doc/en/preface/commons.html).
+>
+> If you use this tool as part of a script or application, you MUST use the `--user-agent` option to set a custom User-Agent that clearly and uniquely identifies it. If you do not, your application may be rate-limited or blocked.
 
 ## Example
 
@@ -75,6 +77,9 @@ Options:
           Overpass server [default: https://overpass-api.de]
       --nominatim-server <URL>
           Nominatim server (queried when --area is used) [default: https://nominatim.openstreetmap.org]
+      --user-agent <STRING>
+          Add a custom token to the User-Agent header. If not set, the default header value is
+          overpass-cli/<version>. If this option IS set, the default value is still appended afterwards
       --dry-run
           Construct and print query but do not send to server
 ````

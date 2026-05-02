@@ -9,7 +9,7 @@ use clap::{Parser, ValueEnum};
 
 const DEFAULT_SERVER: &str = "https://overpass-api.de";
 const DEFAULT_NOMINATIM_SERVER: &str = "https://nominatim.openstreetmap.org";
-const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+const DEFAULT_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -57,6 +57,12 @@ struct CliArgs {
     /// Nominatim server (queried when --area is used)
     #[arg(long, value_name = "URL", default_value = DEFAULT_NOMINATIM_SERVER)]
     nominatim_server: String,
+
+    /// Add a custom token to the User-Agent header. If not set, the default
+    /// header value is overpass-cli/<version>. If this option IS set, the
+    /// default value is still appended afterwards.
+    #[arg(long, value_name = "STRING")]
+    user_agent: Option<String>,
 
     /// Construct and print query but do not send to server
     #[arg(long, default_value_t = false)]
@@ -115,6 +121,11 @@ fn quote(s: &str) -> String {
 fn main() -> Result<(), Box<dyn Error>> {
     let args = CliArgs::parse();
 
+    let user_agent = match &args.user_agent {
+        Some(ua) => format!("{} {}", ua, DEFAULT_USER_AGENT),
+        None => DEFAULT_USER_AGENT.to_string(),
+    };
+
     let mut query = if let Some(query) = args.query {
         query.trim().to_string()
     } else {
@@ -163,7 +174,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             args.nominatim_server,
             urlencoding::encode(&area)
         );
-        let res = ureq::get(&url).set("User-Agent", USER_AGENT).call()?;
+        let res = ureq::get(&url).set("User-Agent", &user_agent).call()?;
         let json: serde_json::Value = serde_json::from_str(&res.into_string()?)?;
 
         query = format!(
@@ -221,7 +232,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let endpoint = format!("{}/api/interpreter", args.server);
     let res = ureq::post(&endpoint)
-        .set("User-Agent", USER_AGENT)
+        .set("User-Agent", &user_agent)
         .send_form(&[("data", &query)])?;
 
     match res.content_type() {
