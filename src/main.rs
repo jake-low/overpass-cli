@@ -12,7 +12,7 @@ const DEFAULT_NOMINATIM_SERVER: &str = "https://nominatim.openstreetmap.org";
 const DEFAULT_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(version, about, styles = clap::builder::Styles::plain())]
 struct CliArgs {
     /// Output format
     #[arg(short = 'f', long, value_enum)]
